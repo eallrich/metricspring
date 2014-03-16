@@ -5,10 +5,13 @@ import time
 import sys
 
 import requests
+from statsd import StatsClient
 
 import settings
 
 host = platform.node()
+
+statsd = StatsClient()
 
 def ns(prefix, key):
     """Namespace the key beneath the host and the given prefix"""
@@ -20,6 +23,10 @@ def loadavg():
     values = os.getloadavg()
     
     metrics = {ns('loadavg', k): v for k, v in zip(keys, values)}
+    
+    for metric, value in metrics.items():
+        statsd.gauge(metric, value)
+    
     return metrics
 
 
@@ -57,9 +64,11 @@ def send(metrics):
 
 
 start = used = 0
+metric = ns('metricspring', 'gathering')
 while True:
     start = int(time.time())
-    send(loadavg())
+    with statsd.timer(metric):
+        send(loadavg())
     used = int(time.time()) - start
     time.sleep(60 - used) # sleep for the remainder of the minute
 
