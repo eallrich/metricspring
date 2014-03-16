@@ -47,8 +47,8 @@ def send(metrics):
         r = None
         try:
             r = requests.post(server, data=payload, headers=headers)
-        except requests.exceptions.ConnectionError, err:
-            print "ConnectionError against %s: %s" % (server, err)
+        except requests.exceptions.RequestException, err:
+            print "RequestException against %s: %s" % (server, err)
         
         if r and not r.status_code == 201:
             print "Server %s returned status %d" % (server, r.status_code)
