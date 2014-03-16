@@ -1,0 +1,3 @@
+servers = (
+    'http://metrics.example.com/publish',
+)
