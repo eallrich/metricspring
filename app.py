@@ -51,16 +51,13 @@ def send(metrics):
     payload = _prepare(metrics)
     
     for server in settings.servers:
-        r = None
         try:
             r = requests.post(server, data=payload, headers=headers)
+            if r.status_code != 201:
+                print "Server %s returned status %d; text:" % (server, r.status_code)
+                print r.text
         except requests.exceptions.RequestException as exc:
             print "RequestException against %s: %s" % (server, exc)
-        
-        if r and not r.status_code == 201:
-            print "Server %s returned status %d" % (server, r.status_code)
-            print "    Text: %s" % r.text
-        
 
 
 start = used = 0
