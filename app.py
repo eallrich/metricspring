@@ -67,5 +67,10 @@ while True:
     with statsd.timer(metric):
         send(loadavg())
     used = int(time.time()) - start
-    time.sleep(60 - used) # sleep for the remainder of the minute
+    try:
+        time.sleep(60 - used) # sleep for the remainder of the minute
+    except IOError as exc:
+        print "IOError on time.sleep(60 - %r): %s" % (used, exc)
+        # Default sleep
+        time.sleep(55)
 
