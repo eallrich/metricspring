@@ -65,7 +65,7 @@ metric = ns('metricspring', 'gathering')
 while True:
     start = int(time.time())
     with statsd.timer(metric):
-        send(loadavg())
+        loadavg()
     used = int(time.time()) - start
     try:
         time.sleep(60 - used) # sleep for the remainder of the minute
