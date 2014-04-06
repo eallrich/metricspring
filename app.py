@@ -4,7 +4,7 @@ import time
 
 from statsd import StatsClient
 
-host = platform.node()
+host = platform.node().replace('.', '_')
 
 statsd = StatsClient(prefix=host)
 
