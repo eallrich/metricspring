@@ -48,7 +48,7 @@ def ram():
     total_used = buffer + cache + rss + swap
     total_used_pct = (total_used / (memory_stats['MemTotal'] + memory_stats['SwapTotal'])) * 100
 
-    keys = ('buffer', 'buffer_pct', 'cache', 'cache_pct', 'rss', 'rss_pct', 'ram_used', 'ram_pct', 'swap', 'swap_pct', 'total_used', 'total_used_pct')
+    keys = ('buffer', 'buffer_pct', 'cache', 'cache_pct', 'rss', 'rss_pct', 'ram_used', 'ram_used_pct', 'swap', 'swap_pct', 'total_used', 'total_used_pct')
     values = (buffer, buffer_pct, cache, cache_pct, rss, rss_pct, ram_used, ram_used_pct, swap, swap_pct, total_used, total_used_pct)
 
     metrics = {ns('memory', k): v for k, v in zip(keys, values)}
