@@ -43,13 +43,21 @@ def ram():
     rss_pct = (rss / memory_stats['MemTotal']) * 100
     ram_used = buffer + cache + rss
     ram_used_pct = (ram_used / memory_stats['MemTotal']) * 100
-    swap = memory_stats['SwapTotal'] - memory_stats['SwapFree']
-    swap_pct = (swap / memory_stats['SwapTotal']) * 100
-    total_used = buffer + cache + rss + swap
-    total_used_pct = (total_used / (memory_stats['MemTotal'] + memory_stats['SwapTotal'])) * 100
 
-    keys = ('buffer', 'buffer_pct', 'cache', 'cache_pct', 'rss', 'rss_pct', 'ram_used', 'ram_used_pct', 'swap', 'swap_pct', 'total_used', 'total_used_pct')
-    values = (buffer, buffer_pct, cache, cache_pct, rss, rss_pct, ram_used, ram_used_pct, swap, swap_pct, total_used, total_used_pct)
+    keys = ['buffer', 'buffer_pct', 'cache', 'cache_pct', 'rss', 'rss_pct', 'ram_used', 'ram_used_pct']
+    values = [buffer, buffer_pct, cache, cache_pct, rss, rss_pct, ram_used, ram_used_pct]
+
+    if 'SwapTotal' in memory_stats:
+        # Not every host has swap defined. If no swap, don't report it. Since
+        # 'total' is just RAM plus swap, don't report that either (it's the
+        # same 'ram_used')
+        swap = memory_stats['SwapTotal'] - memory_stats['SwapFree']
+        swap_pct = (swap / memory_stats['SwapTotal']) * 100
+        total_used = buffer + cache + rss + swap
+        total_used_pct = (total_used / (memory_stats['MemTotal'] + memory_stats['SwapTotal'])) * 100
+
+        keys.extend(['swap', 'swap_pct', 'total_used', 'total_used_pct'])
+        values.extend([swap, swap_pct, total_used, total_used_pct])
 
     metrics = {ns('memory', k): v for k, v in zip(keys, values)}
 
