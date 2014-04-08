@@ -47,7 +47,7 @@ def ram():
     keys = ['buffer', 'buffer_pct', 'cache', 'cache_pct', 'rss', 'rss_pct', 'ram_used', 'ram_used_pct']
     values = [buffer, buffer_pct, cache, cache_pct, rss, rss_pct, ram_used, ram_used_pct]
 
-    if 'SwapTotal' in memory_stats:
+    if 'SwapTotal' in memory_stats and memory_stats['SwapTotal'] > 0:
         # Not every host has swap defined. If no swap, don't report it. Since
         # 'total' is just RAM plus swap, don't report that either (it's the
         # same 'ram_used')
